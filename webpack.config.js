@@ -65,7 +65,10 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin({ 
         name: 'manifest'
     }),
-    new ExtractTextPlugin('styles.css'),
+    new ExtractTextPlugin({
+      filename: 'style.css',
+      allChunks: true
+    }),
 
     new HtmlWebpackPlugin({
       filename: 'index.html',
