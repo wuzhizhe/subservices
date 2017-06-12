@@ -31,9 +31,8 @@ function base64UrlToUint8Array(base64UrlData) {
 if (window) {
   window.uint8ArrayToBase64Url = uint8ArrayToBase64Url;
   window.base64UrlToUint8Array = base64UrlToUint8Array;
-} else if (module && module.exports) {
-  module.exports = {
-    uint8ArrayToBase64Url: uint8ArrayToBase64Url,
-    base64UrlToUint8Array: base64UrlToUint8Array,
-  };
+} 
+export default {
+  uint8ArrayToBase64Url,
+  base64UrlToUint8Array
 }

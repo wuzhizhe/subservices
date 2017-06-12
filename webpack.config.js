@@ -4,14 +4,13 @@ var webpack = require('webpack'),
   HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var publicPath = 'http://localhost:3003/';
-var hotMiddlewareScript = 'webpack-hot-middleware/client?reload=true';
 
 module.exports = {
 	entry: {
-    main: './src/main.js'
+    main: ['./src/main.js', 'webpack-hot-middleware/client?reload=true']
   },
 	output: {
-    filename: '[name].[chunkhash].js',
+    filename: '[name].[hash].js',
 		path: path.resolve(__dirname, 'dist'),
     publicPath: publicPath
 	},
@@ -26,6 +25,10 @@ module.exports = {
             use: ExtractTextPlugin.extract({
               use: 'css-loader'
             })
+        },
+        {
+          test: /\.s[a|c]ss$/,
+          loader: 'style!css!sass'
         },
         {
           test: /\.js$/,
@@ -74,7 +77,10 @@ module.exports = {
       filename: 'index.html',
       template: 'index.html',
       inject: true
-    })
+    }),
+
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
 ]
 
 };

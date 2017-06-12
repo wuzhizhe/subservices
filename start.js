@@ -8,6 +8,8 @@ var webpack = require('webpack'),
 var compiler = webpack(webpackDevConfig);
 
 var app = express();
+var reload = require('reload');
+var http = require('http');
 
 // attach to the compiler & the server
 app.use(webpackDevMiddleware(compiler, {
@@ -18,9 +20,19 @@ app.use(webpackDevMiddleware(compiler, {
         colors: true
     }
 }));
-app.use(webpackHotMiddleware(compiler));
-app.listen(3003, function (err) {
-  if (err) {
+
+app.use(webpackHotMiddleware(compiler, {
+  reload: true
+}));
+
+app.use(express.static('./'));
+
+
+var server = http.createServer(app);
+reload(server, app);
+
+server.listen(3003, function(err){
+    if (err) {
     console.log(err)
     return
   }
