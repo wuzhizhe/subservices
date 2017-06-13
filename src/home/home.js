@@ -45,6 +45,33 @@ export default {
       }
     },
 
+    setUpPushPermission() {
+        var _this2 = this;
+
+        this._permissionStateChange(Notification.permission);
+
+        return navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
+          // Let's see if we have a subscription already
+          return serviceWorkerRegistration.pushManager.getSubscription();
+        }).then(function (subscription) {
+          if (!subscription) {
+            // NOOP since we have no subscription and the permission state
+            // will inform whether to enable or disable the push UI
+            return;
+          }
+
+          _this2._stateChangeCb(_this2._state.SUBSCRIBED);
+
+          // Update the current state with the
+          // subscriptionid and endpoint
+          _this2._subscriptionUpdate(subscription);
+        }).catch(function (err) {
+          console.log('setUpPushPermission() ', err);
+          _this2._stateChangeCb(_this2._state.ERROR, err);
+        });
+      }
+    },
+
     // 注册设备
     subscribeDevice(registration) {
       let self = this;
