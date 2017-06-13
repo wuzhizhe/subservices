@@ -1,4 +1,4 @@
-import helper from '../helpers.js';
+import helper from '../public/helpers.js';
 export default {
   name: 'home',
   data () {
@@ -13,16 +13,15 @@ export default {
   },
   methods: {
 
+    // 注册service worker
     registerServiceWorker() {
       let self = this;
       // 检查是否支持service-worker
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./src/service-worker.js')
+        navigator.serviceWorker.register('./src/public/service-worker.js')
         .catch((err) => {
           self.showErrorMessage(
-            'Unable to Register SW',
-            'Sorry this demo requires a service worker to work and it ' +
-            'failed to install - sorry :('
+            '抱歉，无法注册serviceworker，不能使用各项服务。'
           );
           console.error(err);
         })
@@ -40,11 +39,13 @@ export default {
       } else {
         self.showErrorMessage(
           'Service Worker Not Supported',
-          'Sorry this demo requires service worker support in your browser. ' +
-          'Please try this demo in Chrome or Firefox Nightly.'
+          'Sorry this service requires service worker support in your browser. ' +
+          'Please try this in Chrome or Firefox Nightly.'
         );
       }
     },
+
+    // 注册设备
     subscribeDevice(registration) {
       let self = this;
       return registration.pushManager.subscribe({
@@ -58,6 +59,8 @@ export default {
         throw subscriptionErr;
       });
     },
+
+    // 授权允许通知
     getPermissionGranted() {
       let self = this;
       return new Promise((resolve, reject) => {
@@ -74,15 +77,16 @@ export default {
             if (result !== 'granted') {
               reject(new Error('Bad permission result'));
             }
-
             resolve('granted');
           });
         }
       })
     },
+
     showErrorMessage(msg) {
       alert(msg);
     },
+
     showSubscription(data) {
       let codeDom = document.querySelector('.subscription');
       codeDom.innerHTML  = JSON.stringify(data);

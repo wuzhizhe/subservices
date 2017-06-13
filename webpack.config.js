@@ -10,7 +10,8 @@ module.exports = {
     main: ['./src/main.js', 'webpack-hot-middleware/client?reload=true']
   },
 	output: {
-    filename: '[name].[hash].js',
+    filename: './[name]/bundle.js',
+    // filename: '[name].[hash].js',
 		path: path.resolve(__dirname, 'dist'),
     publicPath: publicPath
 	},
@@ -65,7 +66,7 @@ module.exports = {
            return module.context && module.context.indexOf('node_modules') !== -1;
         }
     }),
-    new webpack.optimize.CommonsChunkPlugin({ 
+    new webpack.optimize.CommonsChunkPlugin({
         name: 'manifest'
     }),
     new ExtractTextPlugin({
@@ -73,14 +74,14 @@ module.exports = {
       allChunks: true
     }),
 
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
-      inject: true
-    }),
+    // new HtmlWebpackPlugin({
+    //   filename: 'index.html',
+    //   template: 'index.html',
+    //   inject: true
+    // }),
 
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
-]
+  ]
 
 };

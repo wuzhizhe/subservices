@@ -3,6 +3,7 @@ var webpack = require('webpack'),
     webpackHotMiddleware = require('webpack-hot-middleware'),
     express = require('express'),
     opn = require('opn'),
+    path = require('path'),
     webpackDevConfig = require('./webpack.config.js');
 
 var compiler = webpack(webpackDevConfig);
@@ -25,8 +26,8 @@ app.use(webpackHotMiddleware(compiler, {
   reload: true
 }));
 
-app.use(express.static('./'));
-
+app.use(express.static('./src/public'));
+require('./server/routes')(app);
 
 var server = http.createServer(app);
 reload(server, app);
