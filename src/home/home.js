@@ -3,13 +3,15 @@ export default {
   name: 'home',
   data () {
     return {
+      registration: null,
       msg: 'This is the home page ',
       subscribe: false
     }
   },
   mounted() {
-    this.getPermissionGranted();
+    // this.getPermissionGranted();
     this.registerServiceWorker();
+    // this.setUpPushPermission();
   },
   methods: {
 
@@ -18,7 +20,7 @@ export default {
       let self = this;
       // 检查是否支持service-worker
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./src/public/service-worker.js')
+        navigator.serviceWorker.register('./service-worker.js')
         .catch((err) => {
           self.showErrorMessage(
             '抱歉，无法注册serviceworker，不能使用各项服务。'
@@ -28,8 +30,10 @@ export default {
         .then(function (registration) {
             var serviceWorker;
             if (registration.active) {
+                self.registration = registration;
                 serviceWorker = registration.active;
-                self.subscribeDevice(registration)
+                // self.subscribeDevice(registration)
+                self.setUpPushPermission(registration);
             }
             if (serviceWorker) {
               // serviceWorker.addEventListener('statechange', function (e) {
@@ -45,37 +49,27 @@ export default {
       }
     },
 
+    // 检查是否已经注册了设备
     setUpPushPermission() {
-        var _this2 = this;
-
-        this._permissionStateChange(Notification.permission);
-
-        return navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
-          // Let's see if we have a subscription already
-          return serviceWorkerRegistration.pushManager.getSubscription();
-        }).then(function (subscription) {
-          if (!subscription) {
-            // NOOP since we have no subscription and the permission state
-            // will inform whether to enable or disable the push UI
-            return;
-          }
-
-          _this2._stateChangeCb(_this2._state.SUBSCRIBED);
-
-          // Update the current state with the
-          // subscriptionid and endpoint
-          _this2._subscriptionUpdate(subscription);
-        }).catch(function (err) {
-          console.log('setUpPushPermission() ', err);
-          _this2._stateChangeCb(_this2._state.ERROR, err);
-        });
-      }
+      let self = this;
+      return navigator.serviceWorker.ready.then(function (serviceWorkerRegistration) {
+        return serviceWorkerRegistration.pushManager.getSubscription();
+      }).then(function (subscription) {
+        if (!subscription) {
+          self.subscribeDevice();
+          return;
+        } else {
+          self.deviceSubed();
+        }
+      }).catch(function (err) {
+        console.log('setUpPushPermission() ', err);
+      });
     },
 
     // 注册设备
-    subscribeDevice(registration) {
+    subscribeDevice() {
       let self = this;
-      return registration.pushManager.subscribe({
+      return self.registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: helper.base64UrlToUint8Array('BLg1zLaKf6zNf9OOxKDc_Frmnp6t71As5yCWl0nvxxUnMy7uBf7ofnvWeektc8KxuZfILf4nEeqQ1xWiYpKUP4I')
       })
@@ -108,6 +102,11 @@ export default {
           });
         }
       })
+    },
+
+    // 设备已注册
+    deviceSubed() {
+      this.subscribe = true;
     },
 
     showErrorMessage(msg) {

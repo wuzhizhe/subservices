@@ -12,6 +12,8 @@ var app = express();
 var reload = require('reload');
 var http = require('http');
 
+__rootDir = __dirname;
+
 // attach to the compiler & the server
 app.use(webpackDevMiddleware(compiler, {
     // public path should be the same with webpack config
@@ -26,6 +28,7 @@ app.use(webpackHotMiddleware(compiler, {
   reload: true
 }));
 
+app.use(express.static('./'));
 app.use(express.static('./src/public'));
 require('./server/routes')(app);
 
