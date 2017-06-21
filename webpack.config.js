@@ -3,6 +3,7 @@ var webpack = require('webpack'),
   ExtractTextPlugin = require('extract-text-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin');
 
+// var publicPath = './';
 var publicPath = 'http://localhost:3003/';
 
 module.exports = {
@@ -10,8 +11,8 @@ module.exports = {
     main: ['./src/main.js', 'webpack-hot-middleware/client?reload=true']
   },
 	output: {
-    filename: './[name]/bundle.js',
-    // filename: '[name].[hash].js',
+    // filename: './[name]/bundle.js',
+    filename: '[name].[hash].js',
 		path: path.resolve(__dirname, 'dist'),
     publicPath: publicPath
 	},
@@ -43,18 +44,18 @@ module.exports = {
           }
         },
         {
-          test: /\.(gif|jpg|png|svg|ttf|eot|woff|otf)$/,//(png|jpg|gif|svg)
+          test: /\.(ttf|eot|woff(2)?|otf)$/,
           loader: 'file-loader',
           options: {
-              name: '[path][name].[ext]?[hash]'
+              name: 'fonts/' + '[hash:9].[name].[ext]?[hash]'
           }
         },
         {
-          test: /\.(gif|png|jpg)$/,
+          test: /\.(gif|jpg|png|svg)$/,
           loader: 'url-loader',
           options: {
               limit: 8192,
-              name: '[path][name].[ext]?[hash]',
+              name: 'images/' + '[hash:8].[name].[ext]?[hash]',
           }
         }
       ]
@@ -74,11 +75,11 @@ module.exports = {
       allChunks: true
     }),
 
-    // new HtmlWebpackPlugin({
-    //   filename: 'index.html',
-    //   template: 'index.html',
-    //   inject: true
-    // }),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'index.html',
+      inject: true
+    }),
 
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()

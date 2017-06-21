@@ -5,6 +5,7 @@ export default {
     return {
       registration: null,
       msg: 'This is the home page ',
+      agreeinfo: '请同意网站发送通知',
       subscribe: false
     }
   },
@@ -106,6 +107,7 @@ export default {
 
     // 设备已注册
     deviceSubed() {
+      this.agreeinfo = '已经同意网站发送通知';
       this.subscribe = true;
     },
 
