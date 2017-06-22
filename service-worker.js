@@ -1,50 +1,50 @@
-  self.addEventListener('push', function(event) {
-    console.log('Received push');
-    let notificationTitle = 'Hello';
-    const notificationOptions = {
-      body: 'Thanks for sending this push msg.',
-      icon: './images/logo-192x192.png',
-      badge: './images/badge-72x72.png',
-      tag: 'simple-push-demo-notification',
-      data: {
-        url: 'https://muxblog.tk',
-      },
-    };
+/* global self clients */
 
-    if (event.data) {
-      const dataText = event.data.text();
-      notificationTitle = '你有新的消息';
-      notificationOptions.body = `'${dataText}'`;
+self.addEventListener('push', function (event) {
+  console.log('Received push');
+  let notificationTitle = 'Hello';
+  const notificationOptions = {
+    body: 'Thanks for sending this push msg.',
+    icon: './images/logo-192x192.png',
+    badge: './images/badge-72x72.png',
+    tag: 'simple-push-demo-notification',
+    data: {
+      url: 'https://muxblog.tk'
     }
+  };
 
-    event.waitUntil(
-      Promise.all([
-        self.registration.showNotification(
-          notificationTitle, notificationOptions)
-      ])
-    );
-  });
+  if (event.data) {
+    const dataText = event.data.text();
+    notificationTitle = '你有新的消息';
+    notificationOptions.body = `'${dataText}'`;
+  }
 
-  self.addEventListener('notificationclick', function(event) {
-    event.notification.close();
+  event.waitUntil(
+    Promise.all([
+      self.registration.showNotification(
+        notificationTitle, notificationOptions)
+    ])
+  );
+});
 
-    let clickResponsePromise = Promise.resolve();
-    if (event.notification.data && event.notification.data.url) {
-      clickResponsePromise = clients.openWindow(event.notification.data.url);
-    }
+self.addEventListener('notificationclick', function (event) {
+  event.notification.close();
 
-    event.waitUntil(
-      Promise.all([
-        clickResponsePromise
-      ])
-    );
-  });
+  let clickResponsePromise = Promise.resolve();
+  if (event.notification.data && event.notification.data.url) {
+    clickResponsePromise = clients.openWindow(event.notification.data.url);
+  }
 
-  self.addEventListener('notificationclose', function(event) {
-    event.waitUntil(
-      Promise.all([
-      ])
-    );
-  });
+  event.waitUntil(
+    Promise.all([
+      clickResponsePromise
+    ])
+  );
+});
 
-
+self.addEventListener('notificationclose', function (event) {
+  event.waitUntil(
+    Promise.all([
+    ])
+  );
+});

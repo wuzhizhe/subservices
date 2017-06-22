@@ -1,10 +1,9 @@
-var webpack = require('webpack'),
-    webpackDevMiddleware = require('webpack-dev-middleware'),
-    webpackHotMiddleware = require('webpack-hot-middleware'),
-    express = require('express'),
-    opn = require('opn'),
-    path = require('path'),
-    webpackDevConfig = require('./webpack.config.js');
+var webpack = require('webpack')
+var webpackDevMiddleware = require('webpack-dev-middleware')
+var webpackHotMiddleware = require('webpack-hot-middleware')
+var express = require('express')
+var opn = require('opn')
+var webpackDevConfig = require('./webpack.config.js')
 
 var compiler = webpack(webpackDevConfig);
 
@@ -12,16 +11,14 @@ var app = express();
 var reload = require('reload');
 var http = require('http');
 
-__rootDir = __dirname;
-
 // attach to the compiler & the server
 app.use(webpackDevMiddleware(compiler, {
-    // public path should be the same with webpack config
-    publicPath: webpackDevConfig.output.publicPath,
-    noInfo: true,
-    stats: {
-        colors: true
-    }
+  // public path should be the same with webpack config
+  publicPath: webpackDevConfig.output.publicPath,
+  noInfo: true,
+  stats: {
+    colors: true
+  }
 }));
 
 app.use(webpackHotMiddleware(compiler, {
@@ -35,8 +32,8 @@ require('./server/routes')(app);
 var server = http.createServer(app);
 reload(server, app);
 
-server.listen(3003, function(err){
-    if (err) {
+server.listen(3003, function (err) {
+  if (err) {
     console.log(err)
     return
   }

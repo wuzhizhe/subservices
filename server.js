@@ -15,24 +15,24 @@ webpush.setVapidDetails(
   vapidKeys.privateKey
 );
 
-function sendMessage() {
-	let promiseChain = Promise.resolve();
-	for (let i = 0, length = subscriptions.length; i <  length; i++) {
-	  promiseChain = promiseChain.then(() => {
-	    return triggerPushMsg(JSON.parse(subscriptions[i]), '你好啊');
-	  });
-	}
+function sendMessage () {
+  let promiseChain = Promise.resolve();
+  for (let i = 0, length = subscriptions.length; i < length; i++) {
+    promiseChain = promiseChain.then(() => {
+      return triggerPushMsg(JSON.parse(subscriptions[i]), '你好啊');
+    });
+  }
 }
 
-const triggerPushMsg = function(subscription, dataToSend) {
+const triggerPushMsg = function (subscription, dataToSend) {
   return webpush.sendNotification(subscription, dataToSend)
-  .catch((err) => {
-    if (err.statusCode === 410) {
-      return deleteSubscriptionFromDatabase(subscription._id);
-    } else {
-      console.log('Subscription is no longer valid: ', err);
-    }
-  });
+    .catch((err) => {
+      if (err.statusCode === 410) {
+        console.log(err)
+      } else {
+        console.log('Subscription is no longer valid: ', err);
+      }
+    });
 };
 
 sendMessage();

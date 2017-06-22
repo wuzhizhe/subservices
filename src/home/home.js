@@ -1,7 +1,7 @@
 import helper from '../public/helpers.js';
 export default {
   name: 'home',
-  data () {
+  data() {
     return {
       registration: null,
       msg: 'This is the home page ',
@@ -22,25 +22,25 @@ export default {
       // 检查是否支持service-worker
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./service-worker.js')
-        .catch((err) => {
-          self.showErrorMessage(
-            '抱歉，无法注册serviceworker，不能使用各项服务。'
-          );
-          console.error(err);
-        })
-        .then(function (registration) {
+          .catch((err) => {
+            self.showErrorMessage(
+              '抱歉，无法注册serviceworker，不能使用各项服务。'
+            );
+            console.error(err);
+          })
+          .then(function (registration) {
             var serviceWorker;
             if (registration.active) {
-                self.registration = registration;
-                serviceWorker = registration.active;
-                // self.subscribeDevice(registration)
-                self.setUpPushPermission(registration);
+              self.registration = registration;
+              serviceWorker = registration.active;
+              // self.subscribeDevice(registration)
+              self.setUpPushPermission(registration);
             }
             if (serviceWorker) {
               // serviceWorker.addEventListener('statechange', function (e) {
               // });
             }
-        });
+          });
       } else {
         self.showErrorMessage(
           'Service Worker Not Supported',
@@ -71,22 +71,22 @@ export default {
     subscribeDevice() {
       let self = this;
       return self.registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: helper.base64UrlToUint8Array('BLg1zLaKf6zNf9OOxKDc_Frmnp6t71As5yCWl0nvxxUnMy7uBf7ofnvWeektc8KxuZfILf4nEeqQ1xWiYpKUP4I')
-      })
-      .then((subscription) => {
-        self.showSubscription(subscription)
-      })
-      .catch((subscriptionErr) => {
-        throw subscriptionErr;
-      });
+          userVisibleOnly: true,
+          applicationServerKey: helper.base64UrlToUint8Array('BLg1zLaKf6zNf9OOxKDc_Frmnp6t71As5yCWl0nvxxUnMy7uBf7ofnvWeektc8KxuZfILf4nEeqQ1xWiYpKUP4I')
+        })
+        .then((subscription) => {
+          self.showSubscription(subscription)
+        })
+        .catch((subscriptionErr) => {
+          throw subscriptionErr;
+        });
     },
 
     // 授权允许通知
     getPermissionGranted() {
       let self = this;
       return new Promise((resolve, reject) => {
-        if (Notification.permission === 'denied') {
+        if (Notification.permission == 'denied') {
           return reject(new Error('Push messages are blocked.'));
         }
 
@@ -117,8 +117,7 @@ export default {
 
     showSubscription(data) {
       let codeDom = document.querySelector('.subscription');
-      codeDom.innerHTML  = JSON.stringify(data);
+      codeDom.innerHTML = JSON.stringify(data);
     }
-
   }
-}
+};
